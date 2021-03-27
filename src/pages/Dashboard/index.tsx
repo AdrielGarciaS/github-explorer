@@ -2,6 +2,8 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
+import axios from 'axios';
+
 import api from '../../services/api';
 
 import logoImg from '../../assets/logo.svg';
@@ -16,6 +18,11 @@ interface Repository {
     avatar_url: string;
   };
 }
+
+const localApi = axios.create({
+  baseURL: 'http://localhost:3333',
+  withCredentials: true,
+});
 
 const Dashboard: React.FC = () => {
   const [newRepo, setNewRepo] = useState('');
@@ -38,6 +45,16 @@ const Dashboard: React.FC = () => {
       JSON.stringify(repositories),
     );
   }, [repositories]);
+
+  useEffect(() => {
+    async function getCookies() {
+      const response = await localApi.get('/signin');
+
+      console.log(response);
+    }
+
+    getCookies();
+  }, []);
 
   async function handleAddRepository(
     e: FormEvent<HTMLFormElement>,
